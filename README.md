@@ -12,4 +12,6 @@ This script automates user creation in Azure Active Directory using a simulated 
 - `user-provisioning.ps1` – Main provisioning script
 - `users.csv` – Sample HR input data
 - `output-log.txt` – Output log from script
-- `screenshots/` – Screenshots for visual documentation
+
+## 📈 Value
+This project showcases identity lifecycle automation, Azure AD scripting, and practical IAM engineering skills.
