@@ -1,0 +1,47 @@
+  [ 2 0 2 5 - 0 6 - 0 7   2 0 : 4 4 : 3 5 ]   S t a r t i n g   u s e r   p r o v i s i o n i n g   s c r i p t . . . 
+ 
+ [ 2 0 2 5 - 0 6 - 0 7   2 0 : 4 4 : 3 5 ]   R e a d i n g   i n p u t   f i l e :   . \ u s e r s . c s v 
+ 
+ [ 2 0 2 5 - 0 6 - 0 7   2 0 : 4 4 : 3 5 ]   P r o c e s s i n g   u s e r :   a j o h n s o n 
+ 
+     - >   C r e a t i n g   A z u r e   A D   u s e r . . .   S U C C E S S 
+ 
+     - >   C r e a t e d   g r o u p :   M a r k e t i n g 
+ 
+     - >   A d d i n g   t o   g r o u p :   M a r k e t i n g . . .   S U C C E S S 
+ 
+ [ 2 0 2 5 - 0 6 - 0 7   2 0 : 4 4 : 3 7 ]   P r o c e s s i n g   u s e r :   b t h o m p s o n 
+ 
+     - >   C r e a t i n g   A z u r e   A D   u s e r . . .   S U C C E S S 
+ 
+     - >   C r e a t e d   g r o u p :   E n g i n e e r i n g 
+ 
+     - >   A d d i n g   t o   g r o u p :   E n g i n e e r i n g . . .   S U C C E S S 
+ 
+ [ 2 0 2 5 - 0 6 - 0 7   2 0 : 4 4 : 3 8 ]   P r o c e s s i n g   u s e r :   c n g u y e n 
+ 
+     - >   C r e a t i n g   A z u r e   A D   u s e r . . .   S U C C E S S 
+ 
+     - >   C r e a t e d   g r o u p :   H R 
+ 
+     - >   A d d i n g   t o   g r o u p :   H R . . .   S U C C E S S 
+ 
+ [ 2 0 2 5 - 0 6 - 0 7   2 0 : 4 4 : 3 9 ]   P r o c e s s i n g   u s e r :   d l o p e z 
+ 
+     - >   C r e a t i n g   A z u r e   A D   u s e r . . .   S U C C E S S 
+ 
+     - >   C r e a t e d   g r o u p :   F i n a n c e 
+ 
+     - >   A d d i n g   t o   g r o u p :   F i n a n c e . . .   S U C C E S S 
+ 
+ [ 2 0 2 5 - 0 6 - 0 7   2 0 : 4 4 : 4 1 ]   P r o c e s s i n g   u s e r :   e w a n g 
+ 
+     - >   C r e a t i n g   A z u r e   A D   u s e r . . .   S U C C E S S 
+ 
+     - >   C r e a t e d   g r o u p :   I T 
+ 
+     - >   A d d i n g   t o   g r o u p :   I T . . .   S U C C E S S 
+ 
+ [ 2 0 2 5 - 0 6 - 0 7   2 0 : 4 4 : 4 2 ]   P r o v i s i o n i n g   c o m p l e t e .   T o t a l   u s e r s   p r o c e s s e d :   5 
+ 
+ 
