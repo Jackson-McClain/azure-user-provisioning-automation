@@ -2,10 +2,10 @@
 
 # Author: Jackson McClain
 
-# Description: This script will be used to automatically provision an Azure AD users from a CSV file
+# Description: This script will be used to automatically provision Azure AD users and groups from a CSV file. This script assumes you have already installed and imported the Microsoft.Graph module
 
-# Import AzureAD module unless it is already imported
-Import-Module AzureAD -ErrorAction Stop
+# Connect to Microsoft Graph with only the required scopes
+Connect-MgGraph -Scopes "User.ReadWrite.All", "Group.ReadWrite.All"
 
 # Inputting CSV
 $csvPath = ".\users.csv"
@@ -13,12 +13,6 @@ $csvPath = ".\users.csv"
 # Output file
 $logPath = ".\output-log.txt"
 "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] Starting user provisioning script..." | Out-File -FilePath $logPath
-
-# Connecting to AzureAD 
-if (-not (Get-AzureADTenantDetail -ErrorAction SilentlyContinue)) {
-    Write-Host "Connecting to Azure AD..."
-    Connect-AzureAD
-}
 
 # Reading CSV
 try {
@@ -34,15 +28,23 @@ catch {
 # Loop through each user for info
 foreach ($user in $users) {
     $displayName = "$($user.FirstName) $($user.LastName)"
-    $userPrincipalName = "$($user.Username)@fakeemaildomain.com"
-    $password = Read-Host "Enter a default password" -AsSecureString
+    $userPrincipalName = "$($user.Username)@jacks90563gmail.onmicrosoft.com"
+    $passwordProfile = @{ Password = "Password1!"; ForceChangePasswordNextSignIn = $true }
 
     Write-Host "Processing user: $displayName ($userPrincipalName)"
     "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] Processing user: $($user.Username)" | Out-File -Append -FilePath $logPath
 
-    # Creating users in AzureAD
+    # Creating users in Microsoft Graph
     try {
-        $newUser = New-AzureADUser -DisplayName $displayName -UserPrincipalName $userPrincipalName -AccountEnabled $true -PasswordProfile @{ Password = $password; ForceChangePasswordNextLogin = $true } -MailNickName $user.Username -GivenName $user.FirstName -Surname $user.LastName -Department $user.Department -JobTitle $user.JobTitle
+        $newUser = New-MgUser -DisplayName $displayName `
+                               -UserPrincipalName $userPrincipalName `
+                               -AccountEnabled:$true `
+                               -PasswordProfile $passwordProfile `
+                               -MailNickname $user.Username `
+                               -GivenName $user.FirstName `
+                               -Surname $user.LastName `
+                               -Department $user.Department `
+                               -JobTitle $user.JobTitle
 
         Write-Host "  -> User created successfully"
         "  -> Creating Azure AD user... SUCCESS" | Out-File -Append -FilePath $logPath
@@ -53,23 +55,36 @@ foreach ($user in $users) {
         continue
     }
 
-    # Adding user to dept. group. Group created if needed
-    $group = Get-AzureADGroup -All $true | Where-Object { $_.DisplayName -eq $user.Department }
-    if ($group) {
-        try {
-            Add-AzureADGroupMember -ObjectId $group.ObjectID -RefObjectId $newUser.ObjectID
-            Write-Host "  -> Added to group: $($group.DisplayName)"
-            "  -> Adding to group: $($group.DisplayName)... SUCCESS" | Out-File -Append -FilePath $logPath
-        }
-        catch {
-            $group = New-AzureADGroup -DisplayName $user.Department -SecurityEnabled $true -Description "Security group for members of the $($user.Department) department."
-            Add-AzureADGroupMember -ObjectId $group.ObjectID -RefObjectId $newUser.ObjectID
-            Write-Host " -> Created group: $($group.DisplayName)"
-            "  -> Added to group: $($group.DisplayName)"
-            "  -> Adding to group: $($group.DisplayName)... SUCCESS" | Out-File -Append -FilePath $logPath
+    # Group created if needed
+    $group = Get-MgGroup -All:$true | Where-Object { $_.DisplayName -eq $user.Department }
+    if (-not $group) {
+    try {
+        $group = New-MgGroup -DisplayName $user.Department `
+                              -MailEnabled:$false `
+                              -MailNickname $user.Department `
+                              -SecurityEnabled:$true `
+                              -GroupTypes @()
+        Write-Host " -> Created group: $($group.DisplayName)"
+        "  -> Created group: $($group.DisplayName)" | Out-File -Append -FilePath $logPath
+    }
+    catch {
+        Write-Warning "  -> Group creation failed: $_"
+        "  -> Group creation failed: $_" | Out-File -Append -FilePath $logPath
+        continue
         }
     }
-    
+
+    # Now add user to the group
+    try {
+        New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $newUser.Id
+        Write-Host "  -> Added to group: $($group.DisplayName)"
+        "  -> Adding to group: $($group.DisplayName)... SUCCESS" | Out-File -Append -FilePath $logPath
+    }
+    catch {
+        Write-Warning "  -> Failed to add to group: $_"
+        "  -> Adding to group: $($group.DisplayName)... FAILED: $_" | Out-File -Append -FilePath $logPath
+    }
+}
+
 Write-Host "✅ Provisioning complete."
 "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] Provisioning complete. Total users processed: $($users.Count)" | Out-File -Append -FilePath $logPath
-}
