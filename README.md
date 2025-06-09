@@ -5,7 +5,8 @@ This script automates user creation in Azure Active Directory using a simulated 
 
 ## ⚙️ Tech Stack
 - PowerShell
-- Azure AD PowerShell Module
+- Microsoft.Graph PowerShell Module
+- Azure AD Test Environment
 - CSV (simulated HR feed)
 
 ## 📂 File Contents
